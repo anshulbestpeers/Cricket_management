@@ -1,0 +1,26 @@
+
+<p>
+  <strong>Name:</strong>
+  <%= @player.name %>
+</p>
+<%debugger%>
+<p>
+  <strong>Role:</strong>
+  <%= @player.role %>
+</p>
+
+<% if @player.role == 'Batsman' %>
+  <p>
+    <strong>Batting Stats:</strong>
+    <%= @player.batting_stats %>
+  </p>
+<% elsif @player.role == 'Bowler' %>
+  <p>
+    <strong>Bowling Stats:</strong>
+    <%= @player.bowling_stats %>
+  </p>
+<% end %>
+
+
+<%= link_to 'Edit', edit_player_path(@player), remote: true %>
+<%= link_to 'Back', players_path, remote: true %>

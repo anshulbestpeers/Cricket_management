@@ -1,0 +1,27 @@
+<h1>Player List</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Batting Stats</th>
+      <th>Bowling Stats</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @players.each do |player| %>
+      <tr>
+        <td><%= player.name %></td>
+        <td><%= player.role %></td>
+        <td><%= player.batting_stats.to_json %></td>
+        <td><%= player.bowling_stats.to_json %>
+        <%= link_to "Show", player, class: 'btn btn-info' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'New Player', new_player_path, remote: true %>
+

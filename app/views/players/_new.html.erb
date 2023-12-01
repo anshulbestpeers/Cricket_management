@@ -1,0 +1,85 @@
+
+<%= form_with(model: @player, url: @player.persisted? ? player_path(@player) : players_path, local: true, method: @player.persisted? ? :patch : :post) do |form| %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :role %>
+    <%= form.select :role, ['Batsman', 'Bowler', 'All-Rounder'], { include_blank: 'Select Role' }, id: 'role_select' %>
+  </div>
+
+  <div class="field" id="batting_stats_field">
+    <%= form.label :batting_stats %>
+    <%= form.text_area :batting_stats, rows: 5, id: 'batting_stats_input' %>
+  </div>
+
+  <!-- JSONB Field for Bowling Stats -->
+  <div class="field" id="bowling_stats_field">
+    <%= form.label :bowling_stats %>
+    <%= form.text_area :bowling_stats, rows: 5, id: 'bowling_stats_input' %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var roleSelect = document.getElementById('role_select');
+    var battingStatsField = document.getElementById('batting_stats_field');
+    var bowlingStatsField = document.getElementById('bowling_stats_field');
+
+    var battingStatsData = {
+      "runs": "",
+      "ballsFaced": "",
+      "fours": "",
+      "sixes": ""
+    };
+
+    // Initial data for bowling_stats
+    var bowlingStatsData = {
+      "wickets": "",
+      "ballsBowled": "",
+      "runsConceded": ""
+    };
+
+    
+    // Function to toggle visibility based on the selected role
+    function toggleFields() {
+      var selectedRole = roleSelect.value;
+
+      if (selectedRole === 'Batsman') {
+        battingStatsField.style.display = 'block';
+        bowlingStatsField.style.display = 'none';
+        document.getElementById('batting_stats_input').value = JSON.stringify(battingStatsData, null, 2);
+      } else if (selectedRole === 'Bowler') {
+        battingStatsField.style.display = 'none';
+        bowlingStatsField.style.display = 'block';
+        document.getElementById('bowling_stats_input').value = JSON.stringify(bowlingStatsData, null, 2);
+      } else if (selectedRole === 'All-Rounder') {
+        battingStatsField.style.display = 'block';
+        bowlingStatsField.style.display = 'block';
+        document.getElementById('batting_stats_input').value = JSON.stringify(battingStatsData, null, 2);
+        document.getElementById('bowling_stats_input').value = JSON.stringify(bowlingStatsData, null, 2);
+      } else {
+        battingStatsField.style.display = 'none';
+        bowlingStatsField.style.display = 'none';
+      }
+    }
+
+    // Initial setup
+    toggleFields();
+
+    // Attach event listener to role dropdown
+    roleSelect.addEventListener('change', toggleFields);
+  });
+
+</script>
+
+
+
+

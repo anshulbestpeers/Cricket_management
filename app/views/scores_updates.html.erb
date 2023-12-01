@@ -1,0 +1,67 @@
+<!-- app/views/scores_updates.html.erb -->
+
+<h1>Update Scores</h1>
+
+<!-- Form for updating scores -->
+<%= form_with(model: @player, url: update_scores_path(@player), local: true, id: 'update_scores_form') do |form| %>
+  <div>
+    <%= form.label :batting_stats %>
+    <%= form.text_area :batting_stats, rows: 5, id: 'batting_stats_input' %>
+  </div>
+
+  <div>
+    <%= form.label :bowling_stats %>
+    <%= form.text_area :bowling_stats, rows: 5, id: 'bowling_stats_input' %>
+  </div>
+
+  <div>
+    <%= form.submit 'Update Scores', id: 'update_scores_button' %>
+  </div>
+<% end %>
+
+<!-- JavaScript for handling form submission and WebSocket connection -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('update_scores_form');
+    const updateButton = document.getElementById('update_scores_button');
+
+    updateButton.addEventListener('click', function(event) {
+      event.preventDefault();
+
+      const battingStatsInput = document.getElementById('batting_stats_input');
+      const bowlingStatsInput = document.getElementById('bowling_stats_input');
+
+      const battingStats = JSON.parse(battingStatsInput.value);
+      const bowlingStats = JSON.parse(bowlingStatsInput.value);
+
+      // Send the updated scores to the server
+      const scoresUpdateData = {
+        player_id: <%= @player.id %>,
+        batting_stats: battingStats,
+        bowling_stats: bowlingStats,
+      };
+
+      // Assuming you have a ScoresUpdatesController with an update action
+      fetch('/update_scores', {
+        method: 'PATCH', // or 'POST' if your update action uses POST
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': '<%= form_authenticity_token %>',
+        },
+        body: JSON.stringify(scoresUpdateData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response, if needed
+        console.log('Update successful:', data);
+      })
+      .catch(error => {
+        console.error('Error updating scores:', error);
+      });
+    });
+
+    // Add your WebSocket connection code here
+    // ...
+
+  });
+</script>
